@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DreamLog</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+    <title>Password Reset</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color:#ededed;">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" th:href="@{'/'}">DreamLog</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a th:href="@{/public}">Public Dreams</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">About</a></li>
+                <li class="dropdown">
+                    <a class="glyphicon glyphicon-user" data-toggle="dropdown" th:text="${accountUsername}"> Page 1
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a th:href="@{/logout}" method="post">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<!--<div style="background-color:#337ab7;height:50px;"> <a th:href="@{'/'}">DreamLog </a> </div>-->
+<div class="container">
+
+    <div style="margin-top: 80px;background-color:#fff;padding:20px;border:solid 1px #ddd;">
+        <h2>Public Dreams</h2>
+        <form class="form-inline" th:action="@{'/public'}" th:object="${newDream}" method="get">
+            <div class="input-group">
+                <input class="form-control" type="text" size="32" th:field="*{type}" placeholder="Search" />
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
+            <select th:field="*{author}">
+                <option th:value="'title'">Search by Title</option>
+                <option th:value="'type'">Search by Type</option>
+                <option th:value="'author'">Search by Author</option>
+            </select>
+            <br><br>
+
+        </form>
+        <div th:if="${pDreams.isEmpty()}">
+            <p>No public dreams have been found.</p>
+        </div>
+
+        <div th:if="${!pDreams.isEmpty()}">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Author</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="entry: ${pDreams}">
+                    <td th:text="${entry.title}"></td>
+                    <td th:text="${entry.type}"></td>
+                    <td th:text="${entry.author}"></td>
+                    <td><a th:href="@{'/' + ${entry.id}}">Select</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+</html>

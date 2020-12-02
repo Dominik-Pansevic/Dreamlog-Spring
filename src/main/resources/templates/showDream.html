@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DreamLog</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+    <title>Password Reset</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color:#ededed;">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" th:href="@{'/'}">DreamLog</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a th:href="@{/public}">Public Dreams</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">About</a></li>
+                <li class="dropdown">
+                    <a class="glyphicon glyphicon-user" data-toggle="dropdown" th:text="${accountUsername}"> Page 1
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a th:href="@{/logout}" method="post">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<div class="container">
+
+    <div style="margin-top: 80px;background-color:#fff;padding:20px;border:solid 1px #ddd;">
+        <h2>Dream</h2>
+    <table class="table table-hover">
+        <tbody>
+        <tr> <th>Author</th> </tr>
+        <tr> <td th:text="${newDream.author}"></td> </tr>
+        <tr> <th>Title</th> </tr>
+        <tr> <td th:text="${newDream.title}"></td> </tr>
+        <tr> <th>Type</th> </tr>
+        <tr>  <td th:text="${newDream.type}"></td> </tr>
+        <tr> <th>Description</th> </tr>
+        <tr> <td  th:utext="${newDream.description}"></td> </tr>
+        </tbody>
+    </table>
+        <div th:if="${newDream.getAuthor().equals(accountUsername)}">
+
+            <form th:action="@{'/update/' + ${newDream.id}}">
+                <input type="submit"
+                       value="Edit Dream" class="btn btn-default" />
+            </form>
+
+        </div>
+    </div>
+
+    <div th:if="${newDream.getVisibility() != null}">
+        <div  style="margin-top: 80px;background-color:#fff;padding:20px;border:solid 1px #ddd;">
+            <h2>Leave a Comment:</h2>
+            <h2 th:text="${formHeader}"></h2>
+            <form  th:object="${newComment}" method="post" >
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea class="form-control" rows="5" th:field="*{content}" />
+                </div>
+                <input type="submit"
+                       value="Submit" class="btn btn-default" />
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <br><br>
+                <p class="warning" th:if="${#fields.hasErrors('content')}">Write a comment first!</p>
+            </form>
+
+        </div>
+
+        <div style="margin-top: 80px;background-color:#fff;padding:20px;border:solid 1px #ddd;">
+            <h2>  <span class="badge" th:text="${commentsAmount}"></span> Comments:</h2>
+            <br>
+        <tr th:each="entry: ${comments}">
+            <div class="media">
+                <div class="media-left">
+                    <img src="/images/img_avatar1.png" class="media-object" style="width:60px">
+                </div>
+                <div class="media-body">
+                    <div style="clear: both">
+                        <h4  class="media-heading" th:text="${entry.author}"></h4>
+                        <small><i> <h4  class="media-heading" th:text="'Posted on ' + ${entry.entryDate}"</h4> </i></small>
+                    </div>
+                    <hr />
+                    <p  th:utext="${entry.content}"></p>
+                </div>
+            </div>
+            <hr>
+        </tr>
+        </div>
+    </div>
+
+
+
+</div>
+</body>
+</html>
